@@ -70,34 +70,34 @@ public class EventManager {
 	public boolean addVolunteer(String name, String[] availableDatesStrAry){
 		int date = 0;	//The separate integer values we got from file, put into availableDatesStrAry.
 		ArrayList<Integer> intDates = new ArrayList<Integer>();	//The list of integers dates derived from String array.
-		
-		//**Getting volunteer dates and putting them into an arrayList.**
-		if (availableDatesStrAry.length != 0) {
-			//**For each string number, make into integer, add as date to intDates list.**
-			for (String str : availableDatesStrAry) { 
-				date = Integer.parseInt(str);
-				intDates.add(date); 		  
-			}		
-			//**Return false if there are any invalid date values (not in 1 -> 30 range), or duplicate dates**
-			for (int i = 0; i < intDates.size(); i++) {
-				if (!(1 <= intDates.get(i)) || !(intDates.get(i) <= 30)) {
-					return false;		//Return false for invalid dates.
-				}
-				for (int j = 1; j < intDates.size(); j++) { 
-					if (intDates.get(i) == intDates.get(j)) {
-						return false;	//Return false for duplicate dates.
-					}
+	
+		/*
+		 * Getting volunteer dates and putting them into an arrayList.
+		 * For each string number, make into integer, add as date to intDates list.
+		 */
+		for (String str : availableDatesStrAry) { 
+			date = Integer.parseInt(str);
+			intDates.add(date); 		  
+		}		
+		//**Return false if there are any invalid date values (not in 1 -> 30 range), or duplicate dates**
+		for (int i = 0; i < intDates.size(); i++) {
+			if (!(1 <= intDates.get(i)) || !(intDates.get(i) <= 30)) {
+				System.out.println("value out of range exception");
+				return false;		//Return false for invalid dates.
+			}
+			for (int j = i + 1; j < intDates.size(); j++) { //FIXME eventually i = 1 on both loops...
+				System.out.println(intDates.get(i) + ":" + intDates.get(j) + "z");
+				if (intDates.get(i) == intDates.get(j)) {
+					System.out.println("duplicate exception");
+					return false;	//Return false for duplicate dates.
 				}
 			}
-			//**If valid volunteer, then we add it to sorted array.**
-			Volunteer newVolunteer = new Volunteer(name, intDates);
-			volunteerList.add(newVolunteer); 
-			Collections.sort(volunteerList);
-			return true;	//Return true after adding in the volunteer.
 		}
-		else {	//If volunteer has no available dates, still, however it will never be matched to event.
-			return true;
-		}
+		//**If valid volunteer, then we add it to sorted array.**
+		Volunteer newVolunteer = new Volunteer(name, intDates);
+		volunteerList.add(newVolunteer); 
+		Collections.sort(volunteerList);
+		return true;	//Return true after adding in the volunteer.
 	}
 	
 	/** 

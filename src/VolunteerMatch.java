@@ -204,8 +204,8 @@ public class VolunteerMatch {
 				}
 				
 				//**After passing format checks, construct names, type of data (v or e), and dates from file.**
-				String type = vEinfoList.get(0).trim(); 		 //'v' or 'e' for volunteer or event, respectively.
-				String name = vEinfoList.get(1).trim(); //The name of the volunteer or event.
+				String type = vEinfoList.get(0).trim(); 		 	  //'v' or 'e' for volunteer or event, respectively.
+				String name = vEinfoList.get(1).trim(); 		 	  //The name of the volunteer or event.
 				String[] dates = vEinfoList.get(2).trim().split(","); //The comma-separated dates (numbers).
 				
 				if (type.equalsIgnoreCase("v")) { //If a volunteer from the file, then add it to list of volunteers.
@@ -220,7 +220,7 @@ public class VolunteerMatch {
 						continue; 
 					}
 				}
-				//TODO do some shit for event addition LOGIC G8S
+				//TODO do something for event addition
 				else if (type.equalsIgnoreCase("e")) {
 					
 				}
