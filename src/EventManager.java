@@ -49,8 +49,25 @@ public class EventManager {
 	 * @return true if arguments have valid format and added event successfully, otherwise false
 	 */
 	public boolean addEvent(String name, String dateStr, String limitStr){
-		// TODO: implement this method
-		return true;
+		int eventDate = Integer.parseInt(dateStr);		//Integer value of the date of the event.
+		int maxVolunteers = Integer.parseInt(limitStr); //Integer value of the max number of volunteers for this event.
+		
+		if (!(findEvent(name) == null) || name == null || name.isEmpty()) {
+			return false;	//If duplicate name, empty name, or null name, then return false.
+		}
+		if (!(1 <= eventDate) || !(eventDate <= 30)) {
+			return false;	//If the event date is out of valid range, then return false.
+		}
+		if (maxVolunteers < 1) {
+			return false; 	//Invalid amount of maximum volunteers (has to be at least one).
+		}
+		
+		//**If valid event, then we add it to sorted list.**
+		Event newEvent = new Event(name, eventDate, maxVolunteers);
+		eventList.add(newEvent); 
+		Collections.sort(eventList);
+		
+		return true;	//Return true after adding in the event list.
 	}
 		
 	/**
@@ -59,6 +76,7 @@ public class EventManager {
 	 * 
 	 * Tip: Collections.sort can be used after a new volunteer is added.
 	 * 
+	 * The following conditions result in no volunteer being added and false being returned.
 	 * <ul>
 	 * <li>Name must not be null or empty string</li>
 	 * <li>Volunteer name must not be a duplicate.</li>
@@ -66,11 +84,16 @@ public class EventManager {
 	 *
 	 * @param name the name of a new volunteer
 	 * @param availableDatesStrAry a String array that has date strings
+	 * @return true if volunteer was successfully added to volunteer list. Else, return false.
 	 */
 	public boolean addVolunteer(String name, String[] availableDatesStrAry){
-		int date = 0;	//The separate integer values we got from file, put into availableDatesStrAry.
+		int date = 0;		//The separate integer values we got from file, put into availableDatesStrAry.
 		ArrayList<Integer> intDates = new ArrayList<Integer>();	//The list of integers dates derived from String array.
 	
+		if (!(findVolunteer(name) == null) || name == null || name.isEmpty()) {
+			return false;	//If duplicate name, empty name, or null name, then return false.
+		}
+		
 		/*
 		 * Getting volunteer dates and putting them into an arrayList.
 		 * For each string number, make into integer, add as date to intDates list.
@@ -79,24 +102,24 @@ public class EventManager {
 			date = Integer.parseInt(str);
 			intDates.add(date); 		  
 		}		
-		//**Return false if there are any invalid date values (not in 1 -> 30 range), or duplicate dates**
+		//**Return false if there are any invalid date values (not in 1 -> 30 range), or duplicate dates.**
 		for (int i = 0; i < intDates.size(); i++) {
 			if (!(1 <= intDates.get(i)) || !(intDates.get(i) <= 30)) {
-				System.out.println("value out of range exception");
 				return false;		//Return false for invalid dates.
 			}
-			for (int j = i + 1; j < intDates.size(); j++) { //FIXME eventually i = 1 on both loops...
+			for (int j = i + 1; j < intDates.size(); j++) { 
 				System.out.println(intDates.get(i) + ":" + intDates.get(j) + "z");
 				if (intDates.get(i) == intDates.get(j)) {
-					System.out.println("duplicate exception");
 					return false;	//Return false for duplicate dates.
 				}
 			}
 		}
-		//**If valid volunteer, then we add it to sorted array.**
+		
+		//**If valid volunteer, then we add it to sorted list.**
 		Volunteer newVolunteer = new Volunteer(name, intDates);
 		volunteerList.add(newVolunteer); 
 		Collections.sort(volunteerList);
+		
 		return true;	//Return true after adding in the volunteer.
 	}
 	
@@ -168,7 +191,7 @@ public class EventManager {
 	 * @return true if the match is created, otherwise false.
 	 */
 	public boolean createMatch(String eventName, String volunteerName){
-		// TODO: implement this method
+		//TODO 
 		return true;
 	}
 	

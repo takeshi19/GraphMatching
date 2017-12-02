@@ -21,7 +21,7 @@ public abstract class GraphNode implements Comparable<GraphNode> {
 	/** 
 	 * List of all adjacent nodes from this vertex.
 	 * Events will have volunteers as adjacent vertices (successors)
-	 * Volunteers will have events as adjacent verticies (successors)
+	 * Volunteers will have events as adjacent vertices (successors)
 	 */
 	private List<GraphNode> adjacentNodes;
 	
