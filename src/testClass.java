@@ -1,9 +1,16 @@
 
 public class testClass {
 	public static void main (String[] args) {
-//		v;Vounteer Name;date1;date2
-		String testString = "v Vounteer Namedate1date2";
-		//FIXME what if we only have one semi-colon??
-		testString.split(";"); //Array length = 0 of a string if we split on semi-colon but no scs in string.
+//		EventManager mgmt = new EventManager();
+//		String[] numbers = {"2"};
+		
+		//FIXME we have bugs in the EventManager
+		//-Solved.
+//		if (mgmt.addVolunteer("doggod", numbers)) {
+//			System.out.println("We should not be returning true.");
+//		}
+//		else {
+//			System.out.println("We are returning correct result");
+//		}
 	}
 }

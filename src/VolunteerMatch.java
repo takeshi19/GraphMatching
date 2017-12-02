@@ -184,13 +184,11 @@ public class VolunteerMatch {
 			
 			while (fileScn.hasNextLine()) {					 //Reading in each line of data from file.
 				String fileLine = fileScn.nextLine().trim(); //The string of data per line from file.
-				
 				if (fileLine.isEmpty()) { 
 					continue; //If no data in file, skip it, continue to next line.
 				}
 				
 				String[] volunteerEventinfo = fileLine.split(";"); 		//Split line based on delimiters (";").
-				
 				ArrayList<String> vEinfoList = new ArrayList<String>(); //ArrayList to hold strings after splitting.
 				
 				/*
@@ -206,21 +204,19 @@ public class VolunteerMatch {
 				}
 				
 				//**After passing format checks, construct names, type of data (v or e), and dates from file.**
-				String type = vEinfoList.get(0).trim(); //'v' or 'e' for volunteer or event, respectively.
-				String volunteerName = vEinfoList.get(1).trim(); //The name of the volunteer or event.
+				String type = vEinfoList.get(0).trim(); 		 //'v' or 'e' for volunteer or event, respectively.
+				String name = vEinfoList.get(1).trim(); //The name of the volunteer or event.
 				String[] dates = vEinfoList.get(2).trim().split(","); //The comma-separated dates (numbers).
 				
-	//there is no certain order for v/e lines but matched volunteers for an event must be added before adding the event.
-
 				if (type.equalsIgnoreCase("v")) { //If a volunteer from the file, then add it to list of volunteers.
-					if (manager.findVolunteer(volunteerName).equals(volunteerName)) {
+					if (manager.findVolunteer(name).equals(name)) {
 						continue;				  //If duplicate volunteer, skip the line.
 					}
 					/*
 					 * Ignore the line if there are duplicate dates or one of the dates are invalid. 
 					 * However, if we have an available/unique volunteer, then we add them into list of volunteers. 
 					 */
-					if (manager.addVolunteer(volunteerName, dates) == false) {
+					if (manager.addVolunteer(name, dates) == false) {
 						continue; 
 					}
 				}

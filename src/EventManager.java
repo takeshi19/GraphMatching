@@ -68,24 +68,36 @@ public class EventManager {
 	 * @param availableDatesStrAry a String array that has date strings
 	 */
 	public boolean addVolunteer(String name, String[] availableDatesStrAry){
-		ArrayList<Integer> intDates = new ArrayList<Integer>();
-
+		int date = 0;	//The separate integer values we got from file, put into availableDatesStrAry.
+		ArrayList<Integer> intDates = new ArrayList<Integer>();	//The list of integers dates derived from String array.
+		
 		//**Getting volunteer dates and putting them into an arrayList.**
 		if (availableDatesStrAry.length != 0) {
-			//For each string number, make into integer, add as date to intDates list.
+			//**For each string number, make into integer, add as date to intDates list.**
 			for (String str : availableDatesStrAry) { 
-				int date = Integer.parseInt(str);
+				date = Integer.parseInt(str);
 				intDates.add(date); 		  
 			}		
-			
-//			Sort the volunteer list by volunteer's name after adding the volunteer. 
-//			Ignore the line if there are duplicate dates or one of the dates are invalid.
-	
 			//**Return false if there are any invalid date values (not in 1 -> 30 range), or duplicate dates**
-			if (intDates.s)
+			for (int i = 0; i < intDates.size(); i++) {
+				if (!(1 <= intDates.get(i)) || !(intDates.get(i) <= 30)) {
+					return false;		//Return false for invalid dates.
+				}
+				for (int j = 1; j < intDates.size(); j++) { 
+					if (intDates.get(i) == intDates.get(j)) {
+						return false;	//Return false for duplicate dates.
+					}
+				}
+			}
+			//**If valid volunteer, then we add it to sorted array.**
+			Volunteer newVolunteer = new Volunteer(name, intDates);
+			volunteerList.add(newVolunteer); 
+			Collections.sort(volunteerList);
+			return true;	//Return true after adding in the volunteer.
 		}
-		
-		return true;
+		else {	//If volunteer has no available dates, still, however it will never be matched to event.
+			return true;
+		}
 	}
 	
 	/** 
@@ -132,7 +144,7 @@ public class EventManager {
 	 * @return volunteer if the volunteer exists, otherwise null.
 	 */
 	public Volunteer findVolunteer(String name){
-		// TODO: implement this method
+		//**Linear search through a sorted chain of nodes will have a simple O(N) complexity for N nodes.**
 		return null;
 	}
 	
