@@ -1,0 +1,4 @@
+ 
+ 
+v; Mingi; 1, 2, 3, 4, 23
+e; Birth Day; 23; 1; Mingi

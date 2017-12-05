@@ -87,6 +87,8 @@ public class EventManager {
 	 * @return true if volunteer was successfully added to volunteer list. Else, return false.
 	 */
 	public boolean addVolunteer(String name, String[] availableDatesStrAry){
+		System.out.println("In the EVM");
+		
 		int date = 0;		//The separate integer values we got from file, put into availableDatesStrAry.
 		ArrayList<Integer> intDates = new ArrayList<Integer>();	//The list of integers dates derived from String array.
 	
@@ -108,17 +110,17 @@ public class EventManager {
 				return false;		//Return false for invalid dates.
 			}
 			for (int j = i + 1; j < intDates.size(); j++) { 
-				System.out.println(intDates.get(i) + ":" + intDates.get(j) + "z");
 				if (intDates.get(i) == intDates.get(j)) {
 					return false;	//Return false for duplicate dates.
 				}
 			}
 		}
-		
+		System.out.println("So far, valid input given");
 		//**If valid volunteer, then we add it to sorted list.**
 		Volunteer newVolunteer = new Volunteer(name, intDates);
 		volunteerList.add(newVolunteer); 
 		Collections.sort(volunteerList);
+		System.out.println("About to return true from the addVolunteer method");
 		
 		return true;	//Return true after adding in the volunteer.
 	}
@@ -168,6 +170,8 @@ public class EventManager {
 	 */
 	public Volunteer findVolunteer(String name){
 		//**Linear search through a sorted chain of nodes will have a simple O(N) complexity for N nodes.**
+		//ALGORITHM
+		
 		return null;
 	}
 	
@@ -191,8 +195,49 @@ public class EventManager {
 	 * @return true if the match is created, otherwise false.
 	 */
 	public boolean createMatch(String eventName, String volunteerName){
-		//TODO 
-		return true;
+		Volunteer potentialVol = null; //The potential volunteer, created from volunteerName, for certain event.
+		Event matchedEvent = null;	   //The event that this potential volunteer can be matched to.
+		
+		for (Event ev : eventList) { //Finding the event, based on the eventName, from eventList.
+			if (ev == null) {		 //Return false if an event is null.
+				return false;
+			}
+			if (ev.getName().equals(eventName)) {  //If name found in list, create an Event (GraphNode) from it.
+				matchedEvent = ev;
+			}
+		}
+		for (Volunteer vol : volunteerList) {	//Finding a volunteer, based on volunteerName, from volunteerList.
+			if (vol == null) {					//Return false if a volunteer is null.
+				return false;
+			}
+			if (vol.getName().equals(volunteerName)) {	//If name found in list, create a Volunteer (GraphNode) from it.
+				potentialVol = vol;
+			}
+		}
+		
+		/*
+		 * If two different events, but both held on same date, and volunteer is matched to other event, return false.
+		 * Else, create match and return true. 
+		 */
+		if (potentialVol.isAvailable(matchedEvent.getDate())) { 
+			for (Event otherEvent : eventList) {
+				if (!otherEvent.getName().equals(matchedEvent)) {  
+					if (matchedEvent.getDate() == otherEvent.getDate()) {
+						if (potentialVol.hasEvent(otherEvent.getName())) {
+							return false;
+						}
+					}
+				}		
+			}
+			if (matchedEvent.isBelowLimit()) { //Finally, create a match if volunteer is below limit.
+				//**Edge has been created in the undirected graph.**
+				matchedEvent.addAdjacentNode(potentialVol);
+				potentialVol.addAdjacentNode(matchedEvent); 
+				return true; //Return true after match has been created.
+			}
+			return false; 	 //If event is over limit of volunteers, return false.
+		}
+		return false; 		 //If potential volunteer for event isn't available on those dates, then return false.
 	}
 	
 	/**
