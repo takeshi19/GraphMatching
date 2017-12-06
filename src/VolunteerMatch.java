@@ -184,17 +184,11 @@ public class VolunteerMatch {
 			
 			while (fileScn.hasNextLine()) {					 //Reading in each line of data from file.
 				String fileLine = fileScn.nextLine().trim(); //The string of data per line from file.
-				
-				if (fileLine.isEmpty())  {
-					System.out.println("Skipping empty lines");
-					continue;
-				}
 				String[] volunteerEventinfo = fileLine.split(";"); 		  //Split line based on delimiters (";").
 				ArrayList<String> fileLineData = new ArrayList<String>(); //ArrayList to hold strings after splitting.
 				
 				//**If a volunteer from the file, then add it to list of volunteers.**
 				if (volunteerEventinfo[0].trim().equalsIgnoreCase("v")) {
-					System.out.println("Caught an e");
 					/*
 					 * Check how many items in list to see if proper formatting of delimiters used. Do not want 
 					 * "v volunteer/event name date1, date2" instead of "v; volunteer/event name; date1,date2" 
@@ -204,7 +198,7 @@ public class VolunteerMatch {
 						fileLineData.add(strData);	
 					}
 					if (fileLineData.size() != 3) {	
-						continue; //fileLineData must have exactly 3 items after splitting for valid line format.
+						continue; //Volunteer lines must have exactly 3 items after splitting for valid line format.
 					}
 				
 					//**After passing format checks, construct names and dates from file.**
@@ -220,31 +214,39 @@ public class VolunteerMatch {
 						continue; 
 					}
 				}
+				
 				//**If a volunteer read from the file, then add it to the list of volunteers.**
 				else if (volunteerEventinfo[0].trim().equalsIgnoreCase("e")) { 
-					System.out.println("In event");
-					String eventName = volunteerEventinfo[0].trim(); //Title/name of the event.
+					String eventName = volunteerEventinfo[1].trim(); //Title of the event.
 					
-					//**Getting the semicolon-separated event date, number of volunteers, and matched volunteers.**
-					String[] eventInfo = fileLineData.get(2).trim().split(";"); 
-					
-					//Parsing the event logistics from the file line.
-					String eventDate = eventInfo[0].trim(); 	    //The date of the event.3
-					String maxNumVolunteers = eventInfo[1].trim();  //Max amount of volunteers for this event.
-					String volunteerNames = eventInfo[2].trim();    //The list of volunteers for an event.
-					
-					//Add event to list of events if no event is unique and details are valid, else read next file line.
+					//Adding exactly 5 items (each is separate event data from file line) to an arrayList.
+					for (String strData : volunteerEventinfo) {
+						fileLineData.add(strData);	
+					}
+					if (fileLineData.size() != 5) {	
+						continue; //Event lines must have exactly 5 items after splitting for valid line format.
+					}
+										
+					//**Parsing the event logistics from the file line.**
+					String eventDate = fileLineData.get(2).trim(); 	       //The date of the event.
+					String maxNumVolunteers = fileLineData.get(3).trim();  //Max amount of volunteers for this event.
+					String volunteerNames = fileLineData.get(4).trim();    //The list of matched volunteers.
+							
+					//**Add event to list of events if no duplicate event and logistics are valid, else continue.**
 					if (manager.addEvent(eventName, eventDate, maxNumVolunteers) == false) {
-						continue;
+						continue;		
 					}
 					String[] volunteerList = volunteerNames.split(","); //Get list of volunteer names from the event.
 					
+					//**Attempting to create a match between this event and all of its potential volunteers.**
 					for (String vName : volunteerList) {
-						manager.createMatch(eventName, vName); //Create a match between the event and all of its volunteers.
+						if (manager.createMatch(eventName, vName.trim()) == false) {
+							continue;	//If a volunteer wasn't able to be matched, then continue to next line.
+						}
 					}
 				}
 				//**If neither a volunteer or an event, then just skip the invalid line.**
-				else { 
+				else {
 					continue;
 				}
 			}

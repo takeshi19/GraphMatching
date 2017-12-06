@@ -1,4 +1,5 @@
  
- 
+j; xxxxxx
 v; Mingi; 1, 2, 3, 4, 23
+e; aCId trip; 23; 11; Mingi
 e; Birth Day; 23; 1; Mingi

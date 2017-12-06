@@ -8,7 +8,6 @@ public class testClass {
 		//**Testing if the parsing is correct for the files in eventManager.**
 		try {
 			VolunteerMatch.readFromFile(mgmt, "testFile.txt");
-			System.out.println("?");
 			//**Our file looks like this: 
 			// v; Mingi; 1, 2, 3, 4, 23
 			//	
