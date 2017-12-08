@@ -1,5 +1,6 @@
- 
+ //In this file, we match Mingi (volunteer) to both a ballroom dance
+    //on the and a birthday (events) both scheduled on the 23rd. Our 
+        //readfromFile() method should not make any match between this  
 j; xxxxxx
 v; Mingi; 1, 2, 3, 4, 23
-e; aCId trip; 23; 11; Mingi
 e; Birth Day; 23; 1; Mingi

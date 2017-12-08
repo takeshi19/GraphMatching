@@ -124,15 +124,28 @@ public class EventManager {
 	/** 
 	 * USED ONLY IF AN EVENT NEEDS TO BE REMOVED WHILE READ FROM FILE
 	 * 
-	 * Iterates through the event list and remove the event if event exists. 
+	 * Iterates through the event list and removes the event if event exists. 
 	 * This method must also remove all the event-volunteer matches corresponding to this event.
 	 * 
 	 * @param name the name of the event to be removed
 	 * @return true if the event existed and removed successfully, otherwise false
 	 */
 	public boolean removeEvent(String name) {
-		//TODO: implement this method
-		return true;
+		for (Event certainEvent : eventList) {
+			if (certainEvent.getName().equalsIgnoreCase(name)) {
+				eventList.remove(certainEvent);	//Removing a selected event from eventList if it exists.
+				/*
+				 * Removing all event-volunteer matches corresponding to removed event.
+				 * Do not want volunteers to still be matched to a non-existent event.
+				 */
+				for (GraphNode volunteer : certainEvent.getAdjacentNodes()) {
+					String volunteerName = volunteer.getName(); 		//Name of a matched volunteer to certainEvent.
+					removeMatch(certainEvent.getName(), volunteerName); //Removing the relationship.
+				}
+				return true;		//Return true after a certain event was successfully removed from the list. 
+			}
+		}
+		return false;				//If an event was never found in eventList, then return false.
 	}
 	
 	/**
@@ -143,18 +156,35 @@ public class EventManager {
 	 * @return true if volunteer existed and removed successfully, otherwise false
 	 */
 	public boolean removeVolunteer(String name){
-		// TODO: implement this method
-		return false;
+		for (Volunteer certainVolunteer : volunteerList) {
+			if (certainVolunteer.getName().equalsIgnoreCase(name)) {
+				volunteerList.remove(certainVolunteer);	//Removing a selected volunteer from volunteerList if it exists.
+				/*
+				 * Removing all event-volunteer matches corresponding to removed volunteer.
+				 * Do not want events to still be matched to a non-existent volunteer.
+				 */
+				for (GraphNode event : certainVolunteer.getAdjacentNodes()) {
+					String eventName = event.getName(); 			    //Name of a matched event to certainVolunteer.
+					removeMatch(eventName, certainVolunteer.getName()); //Removing the relationship.
+				}
+				return true;		//Return true after a certain volunteer was successfully removed from the list. 
+			}
+		}
+		return false;				//If a volunteer was never found in volunteerList, then return false.
 	}
 	
 	/**
-	 * Given the event name,check if the event exists in the event list. 
+	 * Given the event name, check if the event exists in the event list. 
 	 * 
 	 * @param name the name of the event to be found
 	 * @return event if the event exists, otherwise null.
 	 */
 	public Event findEvent(String name){
-		// TODO: implement this method
+		for (Event anEvent : eventList) {
+			if (anEvent.getName().equalsIgnoreCase(name)) {
+				return anEvent;
+			}
+		}
 		return null;
 	}
 	
@@ -165,9 +195,11 @@ public class EventManager {
 	 * @return volunteer if the volunteer exists, otherwise null.
 	 */
 	public Volunteer findVolunteer(String name){
-		//**Linear search through a sorted chain of nodes will have a simple O(N) complexity for N nodes.**
-		//ALGORITHM
-		
+		for (Volunteer aVolunteer: volunteerList) {
+			if (aVolunteer.getName().equalsIgnoreCase(name)) {
+				return aVolunteer;
+			}
+		}
 		return null;
 	}
 	
@@ -191,36 +223,24 @@ public class EventManager {
 	 * @return true if the match is created, otherwise false.
 	 */
 	public boolean createMatch(String eventName, String volunteerName){
-		Volunteer potentialVol = null; //The potential volunteer, created from volunteerName, for certain event.
-		Event matchedEvent = null;	   //The event that this potential volunteer can be matched to.
-		
+		Volunteer potentialVol; //The potential volunteer, created from volunteerName, for certain event.
+		Event matchedEvent;	    //The event that this potential volunteer can be matched to.
 		/*
 		 * If eventName found in list of events, make a GraphNode from it to match it to volunteer,
 		 * else return false.  
 		 */
-		for (Event ev : eventList) { 
-			if (ev == null) {		 //Return false if an event is null.
-				return false;
-			}
-			if (ev.getName().equals(eventName)) {  //If name found in list, create an Event (GraphNode) from it.
-				matchedEvent = ev;
-			}
+		matchedEvent = findEvent(eventName); 
+		if (matchedEvent == null) {
+			return false;	
 		}
+		
 		/*
 		 * If volunteerName found in list of volunteers, make a GraphNode from it to match it to volunteer,
 		 * else return false.  
 		 */
-		for (Volunteer vol : volunteerList) {	
-			if (vol == null) {		//Return false if a volunteer is null.
-				return false; 
-			}
-			if (vol.getName().equals(volunteerName)) {	//If name found in list, create a Volunteer (GraphNode) from it.
-				potentialVol = vol;
-			}
-		}
-		//A non-existent Volunteer listed as matched volunteer for event, it's null, return false. 
+		potentialVol = findVolunteer(volunteerName);
 		if (potentialVol == null) {
-			return false; 
+			return false;
 		}
 		
 		//**If Volunteer isn't available on the date of the event, no match made.**
@@ -230,7 +250,8 @@ public class EventManager {
 		
 		//**If volunteer has been matched to any other event on the same date, no match made.**
 		for (Event otherEvent : eventList) {
-			if (!otherEvent.getName().equals(matchedEvent)) {  
+			if (!otherEvent.getName().equalsIgnoreCase(eventName)) {  
+				System.out.println(otherEvent.getName());
 				if (matchedEvent.getDate() == otherEvent.getDate()) {
 					if (potentialVol.hasEvent(otherEvent.getName())) {
 						return false;
@@ -267,8 +288,25 @@ public class EventManager {
 	 * @return true if the match existed and removed successfully, otherwise false.
 	 */
 	public boolean removeMatch(String eventName, String volunteerName){
-		// TODO: implement this method
-		return true;
+		Event event = findEvent(eventName);					//The event GraphNode returned from eventName.
+		Volunteer volunteer = findVolunteer(volunteerName);	//The volunteer GraphNode returned from volunteerName.
+		
+		//**Because our graph is undirected, we have to removed both corresponding matches between volunteer & event.**
+		if (event == null || volunteer == null) {
+			return false; //If either the event or the volunteer do not exist, return false.
+		}
+		//**Checking for adjacency between the 2 nodes before removal.**
+		if (event.isAdjacentNode(volunteerName)) {
+			event.removeAdjacentNode(volunteer);
+			volunteer.removeAdjacentNode(event);
+			volunteer.isAvailable(event.getDate()); //Volunteer is now free on that day that it used to have the event.
+			System.out.println("Removed match yayyy-in EVM()");
+			return true;
+		}	
+		else {
+			System.out.println("Couldn't remove match- in EVM()");
+			return false;	//Return false if not adjacent to each other.
+		}
 	}
 	
 	/**
@@ -283,7 +321,22 @@ public class EventManager {
 	 * Resource.STR_DISPLAY_ALL_EVENTS_PRINT_FORMAT
 	 */
 	public void displayAllEvents(){
-		// TODO: implement this method
+		//TODO TEST ME
+		for (Event eve : eventList) {
+			System.out.println("-Name: " + eve.getName());
+			System.out.println("Date: " + eve.getDate());
+			System.out.println("Maximum number of volunteers: " + eve.getLimit());
+			
+			System.out.println("Matched Volunteer(s): "); //This print statement depends on size of adjacency list.
+			if (eve.getAdjacentNodes().isEmpty()) {
+				System.out.println("No match yet.");
+			}
+			else {	//TODO problematic for-loops = bugs
+				for (int i = 1; i <= eve.getAdjacentNodes().size(); i++) {
+					System.out.println(i + ". " + eve.getAdjacentNodes().get(i-1).getName());
+				}
+			}
+		}
 	}
 	
 	/**	 
@@ -315,7 +368,15 @@ public class EventManager {
 	 * in the format needed to be printed in the file.
 	 */
 	public String toStringAllVolunteers(){
-		// TODO: implement this method
+		String formattedVolunteers = "";
+		
+//		for (Volunteer vol : volunteerList) {
+//			vol.getName();
+//			//Make the letter v.
+//			//make some semicolons some how.
+//			//get some dates going.
+//			formattedVolunteers.
+		//}
 		return null;
 	}
 	
@@ -324,8 +385,8 @@ public class EventManager {
 	 * writing all the events in a file.
 	 * 
 	 * (Example)
-	 * e;Field trip;7
-	 * e;Birthday;23;Mingi,Sonu
+	 * e;Field trip;7;10;
+	 * e;Birthday;23;12;Mingi,Sonu
 	 * 
 	 * @return string containing all the events in the format
 	 * needed to be printed in the file.

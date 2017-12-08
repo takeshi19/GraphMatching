@@ -1,0 +1,86 @@
+java VolunteerMatch
+=============================
+[ Main Menu ]
+=============================
+1. Load EVM from a file
+2. Save EVM to a file
+3. Display all events and corresponding matches
+4. Display all volunteers and corresponding matches
+5. Create a match
+6. Remove a match
+7. Add a volunteer
+8. Remove a volunteer
+9. Quit
+>1
+Enter filepath : in_err.txt
+=============================
+[ Main Menu ]
+=============================
+1. Load EVM from a file
+2. Save EVM to a file
+3. Display all events and corresponding matches
+4. Display all volunteers and corresponding matches
+5. Create a match
+6. Remove a match
+7. Add a volunteer
+8. Remove a volunteer
+9. Quit
+>3
+Display All Events [2 events]
+------------------------
+-Name: Hiking
+ Date: 15
+ Maximum number of volunteers: 20
+ Matched Volunteer(s):
+ No match yet.
+-Name: Shopping Trip
+ Date: 10
+ Maximum number of volunteers: 10
+ Matched Volunteer(s):
+ No match yet.
+=============================
+[ Main Menu ]
+=============================
+1. Load EVM from a file
+2. Save EVM to a file
+3. Display all events and corresponding matches
+4. Display all volunteers and corresponding matches
+5. Create a match
+6. Remove a match
+7. Add a volunteer
+8. Remove a volunteer
+9. Quit
+>4
+Display All Volunteers [1 volunteers]
+------------------------
+-Name: Tianrun
+ Available: 1,3,23
+ Matched Event(s):
+ No match yet.
+=============================
+[ Main Menu ]
+=============================
+1. Load EVM from a file
+2. Save EVM to a file
+3. Display all events and corresponding matches
+4. Display all volunteers and corresponding matches
+5. Create a match
+6. Remove a match
+7. Add a volunteer
+8. Remove a volunteer
+9. Quit
+>2
+Enter filepath : out_err.txt
+=============================
+[ Main Menu ]
+=============================
+1. Load EVM from a file
+2. Save EVM to a file
+3. Display all events and corresponding matches
+4. Display all volunteers and corresponding matches
+5. Create a match
+6. Remove a match
+7. Add a volunteer
+8. Remove a volunteer
+9. Quit
+>9

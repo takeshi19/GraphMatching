@@ -1,0 +1,76 @@
+=============================
+[ Main Menu ]
+=============================
+1. Load EVM from a file
+2. Save EVM to a file
+3. Display all events and corresponding matches
+4. Display all volunteers and corresponding matches
+5. Create a match
+6. Remove a match
+7. Add a volunteer
+8. Remove a volunteer
+9. Quit
+>3
+There is no event yet.
+Display All Events [0 events]
+------------------------
+=============================
+[ Main Menu ]
+=============================
+1. Load EVM from a file
+2. Save EVM to a file
+3. Display all events and corresponding matches
+4. Display all volunteers and corresponding matches
+5. Create a match
+6. Remove a match
+7. Add a volunteer
+8. Remove a volunteer
+9. Quit
+>4
+There is no volunteer yet.
+Display All Volunteers [0 volunteers]
+------------------------
+=============================
+[ Main Menu ]
+=============================
+1. Load EVM from a file
+2. Save EVM to a file
+3. Display all events and corresponding matches
+4. Display all volunteers and corresponding matches
+5. Create a match
+6. Remove a match
+7. Add a volunteer
+8. Remove a volunteer
+9. Quit
+>5
+Which event : field trip
+Which volunteer : deb
+ERROR: Failed to create the match (Event:field trip,Volunteer:deb)
+=============================
+[ Main Menu ]
+=============================
+1. Load EVM from a file
+2. Save EVM to a file
+3. Display all events and corresponding matches
+4. Display all volunteers and corresponding matches
+5. Create a match
+6. Remove a match
+7. Add a volunteer
+8. Remove a volunteer
+9. Quit
+>8
+Volunteer name : deb
+ERROR: Failed to remove the volunteer (deb)
+=============================
+[ Main Menu ]
+=============================
+1. Load EVM from a file
+2. Save EVM to a file
+3. Display all events and corresponding matches
+4. Display all volunteers and corresponding matches
+5. Create a match
+6. Remove a match
+7. Add a volunteer
+8. Remove a volunteer
+9. Quit
+>9

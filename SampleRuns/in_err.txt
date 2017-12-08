@@ -1,0 +1,8 @@
+e;Hiking;15;20;
+e;Birthday;35;20;
+v;Mingi;2,4,5,10,40
+e;Zoo; 3;
+k;Park;12;33
+v;Tianrun;1,3,23
+e;HIKING;10;22;
+e;  Shopping Trip;  10; 10 ;

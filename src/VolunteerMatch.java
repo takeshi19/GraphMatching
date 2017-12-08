@@ -251,9 +251,9 @@ public class VolunteerMatch {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			throw new FileNotFoundException();
+			throw new FileNotFoundException(); //If file cannot be read, throw FileNotFoundException.
 		} finally {
-			fileScn.close();
+			fileScn.close();				   //Making sure to close the scanner.
 		}
 	}
 
@@ -279,11 +279,18 @@ public class VolunteerMatch {
 	 * @throws FileNotFoundException if the program cannot make a file to the filePath, it throws FileNotFoundException
 	 */
 	public static void writeToFile(EventManager manager, String filePath) throws FileNotFoundException{
-	
-		PrintWriter writer = new PrintWriter(filePath);
-
-		//TODO: implement this to handle the menu items
-
+		File outFile = null;
+		PrintWriter writer = null;
+		//TODO work on later.
+		try {
+			outFile = new File(filePath);
+			writer = new PrintWriter(filePath);
+		} catch (FileNotFoundException e) {
+			
+		} finally {
+//			outFile.close();
+			writer.close();
+		}
 		writer.close();
 	}
 }

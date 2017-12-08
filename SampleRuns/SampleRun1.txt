@@ -1,0 +1,57 @@
+java VolunteerMatch
+=============================
+[ Main Menu ]
+=============================
+1. Load EVM from a file
+2. Save EVM to a file
+3. Display all events and corresponding matches
+4. Display all volunteers and corresponding matches
+5. Create a match
+6. Remove a match
+7. Add a volunteer
+8. Remove a volunteer
+9. Quit
+>1
+Enter filepath : nofile.txt
+ERROR: Cannot read file - nofile.txt
+=============================
+[ Main Menu ]
+=============================
+1. Load EVM from a file
+2. Save EVM to a file
+3. Display all events and corresponding matches
+4. Display all volunteers and corresponding matches
+5. Create a match
+6. Remove a match
+7. Add a volunteer
+8. Remove a volunteer
+9. Quit
+>1
+Enter filepath : in1.txt
+=============================
+[ Main Menu ]
+=============================
+1. Load EVM from a file
+2. Save EVM to a file
+3. Display all events and corresponding matches
+4. Display all volunteers and corresponding matches
+5. Create a match
+6. Remove a match
+7. Add a volunteer
+8. Remove a volunteer
+9. Quit
+>2
+Enter filepath : out1.txt
+=============================
+[ Main Menu ]
+=============================
+1. Load EVM from a file
+2. Save EVM to a file
+3. Display all events and corresponding matches
+4. Display all volunteers and corresponding matches
+5. Create a match
+6. Remove a match
+7. Add a volunteer
+8. Remove a volunteer
+9. Quit
+>9
