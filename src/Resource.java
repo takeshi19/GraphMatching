@@ -77,6 +77,6 @@ public class Resource {
 	
 	public static final String STR_DISPLAY_NO_MATCHES = " No match yet.\n";
 
-	public static final String STR_ERROR_DISPLAY_VOLUNTEER_FAILED = "There is no volunteer yet.\n";
-	public static final String STR_ERROR_DISPLAY_EVENT_FAILED = "There is no event yet.\n";
+	public static final String STR_ERROR_DISPLAY_VOLUNTEER_FAILED = "There is no volunteer yet.";
+	public static final String STR_ERROR_DISPLAY_EVENT_FAILED = "There is no event yet.";
 }

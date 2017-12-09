@@ -178,83 +178,78 @@ public class VolunteerMatch {
 		File inputFile = null; 	 	//File object made from the filename.
 		Scanner fileScn = null;		//Scanner to read from the file.
 
-		try {
-			inputFile = new File(filePath);
-			fileScn = new Scanner(inputFile);
+		inputFile = new File(filePath);
+		fileScn = new Scanner(inputFile);
+		
+		while (fileScn.hasNextLine()) {					 //Reading in each line of data from file.
+			String fileLine = fileScn.nextLine().trim(); //The string of data per line from file.
+			String[] volunteerEventinfo = fileLine.split(";"); 		  //Split line based on delimiters (";").
+			ArrayList<String> fileLineData = new ArrayList<String>(); //ArrayList to hold strings after splitting.
 			
-			while (fileScn.hasNextLine()) {					 //Reading in each line of data from file.
-				String fileLine = fileScn.nextLine().trim(); //The string of data per line from file.
-				String[] volunteerEventinfo = fileLine.split(";"); 		  //Split line based on delimiters (";").
-				ArrayList<String> fileLineData = new ArrayList<String>(); //ArrayList to hold strings after splitting.
-				
-				//**If a volunteer from the file, then add it to list of volunteers.**
-				if (volunteerEventinfo[0].trim().equalsIgnoreCase("v")) {
-					/*
-					 * Check how many items in list to see if proper formatting of delimiters used. Do not want 
-					 * "v volunteer/event name date1, date2" instead of "v; volunteer/event name; date1,date2" 
-					 * from file line because strings of separate information will get mixed up. 
-					 */
-					for (String strData : volunteerEventinfo) {
-						fileLineData.add(strData);	
-					}
-					if (fileLineData.size() != 3) {	
-						continue; //Volunteer lines must have exactly 3 items after splitting for valid line format.
-					}
-				
-					//**After passing format checks, construct names and dates from file.**
-					String name = fileLineData.get(1).trim(); 		 	  //The name of the volunteer.		
-					String[] vDates = fileLineData.get(2).split(","); //The comma-separated volunteer dates.
-					
-					//**Trimming each number/date of volunteer to avoid whitespace throwing NumberFormatExceptions.** 
-					for (int i = 0; i < vDates.length; i++) {
-						vDates[i] = vDates[i].trim();
-					}					
-					//Add volunteer to list of volunteers if no duplicate/invalid dates, else read next file line.
-					if (manager.addVolunteer(name, vDates) == false) {
-						continue; 
-					}
+			//**If a volunteer from the file, then add it to list of volunteers.**
+			if (volunteerEventinfo[0].trim().equalsIgnoreCase("v")) {
+				/*
+				 * Check how many items in list to see if proper formatting of delimiters used. Do not want 
+				 * "v volunteer/event name date1, date2" instead of "v; volunteer/event name; date1,date2" 
+				 * from file line because strings of separate information will get mixed up. 
+				 */
+				for (String strData : volunteerEventinfo) {
+					fileLineData.add(strData);	
 				}
-				
-				//**If a volunteer read from the file, then add it to the list of volunteers.**
-				else if (volunteerEventinfo[0].trim().equalsIgnoreCase("e")) { 
-					String eventName = volunteerEventinfo[1].trim(); //Title of the event.
-					
-					//Adding exactly 5 items (each is separate event data from file line) to an arrayList.
-					for (String strData : volunteerEventinfo) {
-						fileLineData.add(strData);	
-					}
-					if (fileLineData.size() != 5) {	
-						continue; //Event lines must have exactly 5 items after splitting for valid line format.
-					}
-										
-					//**Parsing the event logistics from the file line.**
-					String eventDate = fileLineData.get(2).trim(); 	       //The date of the event.
-					String maxNumVolunteers = fileLineData.get(3).trim();  //Max amount of volunteers for this event.
-					String volunteerNames = fileLineData.get(4).trim();    //The list of matched volunteers.
-							
-					//**Add event to list of events if no duplicate event and logistics are valid, else continue.**
-					if (manager.addEvent(eventName, eventDate, maxNumVolunteers) == false) {
-						continue;		
-					}
-					String[] volunteerList = volunteerNames.split(","); //Get list of volunteer names from the event.
-					
-					//**Attempting to create a match between this event and all of its potential volunteers.**
-					for (String vName : volunteerList) {
-						if (manager.createMatch(eventName, vName.trim()) == false) {
-							continue;	//If a volunteer wasn't able to be matched, then continue to next line.
-						}
-					}
+				if (fileLineData.size() != 3) {	
+					continue; //Volunteer lines must have exactly 3 items after splitting for valid line format.
 				}
-				//**If neither a volunteer or an event, then just skip the invalid line.**
-				else {
-					continue;
+			
+				//**After passing format checks, construct names and dates from file.**
+				String name = fileLineData.get(1).trim(); 		 	  //The name of the volunteer.		
+				String[] vDates = fileLineData.get(2).split(","); //The comma-separated volunteer dates.
+				
+				//**Trimming each number/date of volunteer to avoid whitespace throwing NumberFormatExceptions.** 
+				for (int i = 0; i < vDates.length; i++) {
+					vDates[i] = vDates[i].trim();
+				}					
+				//Add volunteer to list of volunteers if no duplicate/invalid dates, else read next file line.
+				if (manager.addVolunteer(name, vDates) == false) {
+					continue; 
 				}
 			}
-		} catch (FileNotFoundException e) {
-			throw new FileNotFoundException(); //If file cannot be read, throw FileNotFoundException.
-		} finally {
-			fileScn.close();				   //Making sure to close the scanner.
+			
+			//**If a volunteer read from the file, then add it to the list of volunteers.**
+			else if (volunteerEventinfo[0].trim().equalsIgnoreCase("e")) { 
+				String eventName = volunteerEventinfo[1].trim(); //Title of the event.
+				
+				//Adding exactly 5 items (each is separate event data from file line) to an arrayList.
+				for (String strData : volunteerEventinfo) {
+					fileLineData.add(strData);	
+				}
+				if (fileLineData.size() != 5) {	
+					continue; //Event lines must have exactly 5 items after splitting for valid line format.
+				}
+									
+				//**Parsing the event logistics from the file line.**
+				String eventDate = fileLineData.get(2).trim(); 	       //The date of the event.
+				String maxNumVolunteers = fileLineData.get(3).trim();  //Max amount of volunteers for this event.
+				String volunteerNames = fileLineData.get(4).trim();    //The list of matched volunteers.
+						
+				//**Add event to list of events if no duplicate event and logistics are valid, else continue.**
+				if (manager.addEvent(eventName, eventDate, maxNumVolunteers) == false) {
+					continue;		
+				}
+				String[] volunteerList = volunteerNames.split(","); //Get list of volunteer names from the event.
+				
+				//**Attempting to create a match between this event and all of its potential volunteers.**
+				for (String vName : volunteerList) {
+					if (manager.createMatch(eventName, vName.trim()) == false) {
+						continue;	//If a volunteer wasn't able to be matched, then continue to next line.
+					}
+				}
+			}
+			//**If neither a volunteer or an event, then just skip the invalid line.**
+			else {
+				continue;
+			}
 		}
+			fileScn.close();
 	}
 
 	/**
@@ -275,22 +270,23 @@ public class VolunteerMatch {
 	 * NOTE : there is no additional new line at the end
 	 * 
 	 * @param manager an EventManager instance that can track volunteers and events
-	 * @param filePath the name of a file to write date toe
+	 * @param filePath the name of a file to write date to
 	 * @throws FileNotFoundException if the program cannot make a file to the filePath, it throws FileNotFoundException
 	 */
 	public static void writeToFile(EventManager manager, String filePath) throws FileNotFoundException{
-		File outFile = null;
-		PrintWriter writer = null;
-		//TODO work on later.
-		try {
-			outFile = new File(filePath);
-			writer = new PrintWriter(filePath);
-		} catch (FileNotFoundException e) {
-			
-		} finally {
-//			outFile.close();
-			writer.close();
+		Scanner fileReader = null;	   //Scanner to scan through data of inputFile.
+		File outFile = null;	   	   //The output file that holds the volunteer and event data.
+		PrintWriter writer = null;     //Enables the writing of data from inputFile to an output file.
+		
+		outFile = new File(filePath);
+		fileReader = new Scanner(outFile);
+		writer = new PrintWriter(filePath + ".txt");	//Creating the output file with the .txt extension.
+		
+		while (fileReader.hasNextLine()) {
+			writer.printf("shit");
 		}
+		
 		writer.close();
+		fileReader.close();
 	}
 }

@@ -322,25 +322,14 @@ public class EventManager {
 	 */
 	public void displayAllEvents(){
 		if (eventList.isEmpty()) {	//If the eventList empty, then there are no events to display- notify this to user. 
-			System.out.println("There is no event yet.");
-			System.out.println("Display All Events [0 events]");
+			System.out.println(Resource.STR_ERROR_DISPLAY_EVENT_FAILED);
+			System.out.printf(Resource.STR_DISPLAY_ALL_EVENTS_PRINT_FORMAT, eventList.size());
 		}
 		else {						//Else, there are some events to display, and they are printed accordingly.
-			System.out.println("Display All Events [" + eventList.size() + " events]");
+			System.out.printf(Resource.STR_DISPLAY_ALL_EVENTS_PRINT_FORMAT, eventList.size());
+			
 			for (Event eve : eventList) {
-				System.out.println("-Name: " + eve.getName());
-				System.out.println("Date: " + eve.getDate());
-				System.out.println("Maximum number of volunteers: " + eve.getLimit());
-				
-				System.out.println("Matched Volunteer(s): "); //This print statement depends on size of adjacency list.
-				if (eve.getAdjacentNodes().isEmpty()) {
-					System.out.println("No match yet.");
-				}
-				else {	//TODO problematic for-loops = bugs
-					for (int i = 1; i <= eve.getAdjacentNodes().size(); i++) {
-						System.out.println(i + ". " + eve.getAdjacentNodes().get(i-1).getName());
-					}
-				}
+				System.out.println(eve.toString());
 			}
 		}
 	}
@@ -357,26 +346,15 @@ public class EventManager {
 	 * Resource.STR_DISPLAY_ALL_VOLUNTEERS_PRINT_FORMAT
 	 */
 	public void displayAllVolunteers(){
-		if (volunteerList.isEmpty()) {
-			System.out.println("There is no volunteer yet.");
-			System.out.println("Display All Volunteers [0 volunteers]");
+		if (volunteerList.isEmpty())  {//If volunteerList empty, then there are no vols to display- notify this to user.
+			System.out.println(Resource.STR_ERROR_DISPLAY_VOLUNTEER_FAILED);
+			System.out.printf(Resource.STR_DISPLAY_ALL_VOLUNTEERS_PRINT_FORMAT, volunteerList.size());
 		}
-		else {	//TODO clean up in Aisle 19.
-			System.out.println("Display All Volunteers [" + volunteerList.size() + " volunteers]");
+		else {				          //Else, there are volunteers to display, and print them accordingly.
+			System.out.printf(Resource.STR_DISPLAY_ALL_VOLUNTEERS_PRINT_FORMAT, volunteerList.size());
+
 			for (Volunteer vol : volunteerList) {
-				System.out.println("-Name: " + vol.getName());
-				System.out.println("Date: " + vol.getDate());
-				System.out.println("Maximum number of volunteers: " + vol.getLimit());
-				
-				System.out.println("Matched Volunteer(s): "); //This print statement depends on size of adjacency list.
-				if (vol.getAdjacentNodes().isEmpty()) {
-					System.out.println("No match yet.");
-				}
-				else {	//TODO problematic for-loops = bugs
-					for (int i = 1; i <= vol.getAdjacentNodes().size(); i++) {
-						System.out.println(i + ". " + vol.getAdjacentNodes().get(i-1).getName());
-					}
-				}
+				System.out.println(vol.toString());		
 			}
 		}
 	}
@@ -395,16 +373,13 @@ public class EventManager {
 	 * in the format needed to be printed in the file.
 	 */
 	public String toStringAllVolunteers(){
-		String formattedVolunteers = "";
-		
-//		for (Volunteer vol : volunteerList) {
-//			vol.getName();
-//			//Make the letter v.
-//			//make some semicolons some how.
-//			//get some dates going.
-//			formattedVolunteers.
-		//}
-		return null;
+		//TODO probably bugs.
+		StringBuilder fileStringOfVols = new StringBuilder();	//Concatenating strings together into 1 large string.
+		 
+		for (Volunteer vol : volunteerList) {
+			fileStringOfVols.append(vol.toFileString());
+		}
+		return fileStringOfVols.toString();
 	}
 	
 	/**
@@ -419,7 +394,12 @@ public class EventManager {
 	 * needed to be printed in the file.
 	 */
 	public String toStringAllEvents(){
-		// TODO: implement this method
-		return null;
+		//TODO probably bugs.
+		StringBuilder fileStringOfEvents = new StringBuilder();	//Concatenating strings together into 1 large string.
+		 
+		for (Event eve : eventList) {
+			fileStringOfEvents.append(eve.toFileString());
+		}
+		return fileStringOfEvents.toString();
 	}
 }
