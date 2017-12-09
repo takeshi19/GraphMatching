@@ -321,19 +321,25 @@ public class EventManager {
 	 * Resource.STR_DISPLAY_ALL_EVENTS_PRINT_FORMAT
 	 */
 	public void displayAllEvents(){
-		//TODO TEST ME
-		for (Event eve : eventList) {
-			System.out.println("-Name: " + eve.getName());
-			System.out.println("Date: " + eve.getDate());
-			System.out.println("Maximum number of volunteers: " + eve.getLimit());
-			
-			System.out.println("Matched Volunteer(s): "); //This print statement depends on size of adjacency list.
-			if (eve.getAdjacentNodes().isEmpty()) {
-				System.out.println("No match yet.");
-			}
-			else {	//TODO problematic for-loops = bugs
-				for (int i = 1; i <= eve.getAdjacentNodes().size(); i++) {
-					System.out.println(i + ". " + eve.getAdjacentNodes().get(i-1).getName());
+		if (eventList.isEmpty()) {	//If the eventList empty, then there are no events to display- notify this to user. 
+			System.out.println("There is no event yet.");
+			System.out.println("Display All Events [0 events]");
+		}
+		else {						//Else, there are some events to display, and they are printed accordingly.
+			System.out.println("Display All Events [" + eventList.size() + " events]");
+			for (Event eve : eventList) {
+				System.out.println("-Name: " + eve.getName());
+				System.out.println("Date: " + eve.getDate());
+				System.out.println("Maximum number of volunteers: " + eve.getLimit());
+				
+				System.out.println("Matched Volunteer(s): "); //This print statement depends on size of adjacency list.
+				if (eve.getAdjacentNodes().isEmpty()) {
+					System.out.println("No match yet.");
+				}
+				else {	//TODO problematic for-loops = bugs
+					for (int i = 1; i <= eve.getAdjacentNodes().size(); i++) {
+						System.out.println(i + ". " + eve.getAdjacentNodes().get(i-1).getName());
+					}
 				}
 			}
 		}
@@ -351,7 +357,28 @@ public class EventManager {
 	 * Resource.STR_DISPLAY_ALL_VOLUNTEERS_PRINT_FORMAT
 	 */
 	public void displayAllVolunteers(){
-		// TODO: implement this method
+		if (volunteerList.isEmpty()) {
+			System.out.println("There is no volunteer yet.");
+			System.out.println("Display All Volunteers [0 volunteers]");
+		}
+		else {	//TODO clean up in Aisle 19.
+			System.out.println("Display All Volunteers [" + volunteerList.size() + " volunteers]");
+			for (Volunteer vol : volunteerList) {
+				System.out.println("-Name: " + vol.getName());
+				System.out.println("Date: " + vol.getDate());
+				System.out.println("Maximum number of volunteers: " + vol.getLimit());
+				
+				System.out.println("Matched Volunteer(s): "); //This print statement depends on size of adjacency list.
+				if (vol.getAdjacentNodes().isEmpty()) {
+					System.out.println("No match yet.");
+				}
+				else {	//TODO problematic for-loops = bugs
+					for (int i = 1; i <= vol.getAdjacentNodes().size(); i++) {
+						System.out.println(i + ". " + vol.getAdjacentNodes().get(i-1).getName());
+					}
+				}
+			}
+		}
 	}
 	
 	/**
