@@ -186,6 +186,8 @@ public class VolunteerMatch {
 			String[] volunteerEventinfo = fileLine.split(";"); 		  //Split line based on delimiters (";").
 			ArrayList<String> fileLineData = new ArrayList<String>(); //ArrayList to hold strings after splitting.
 			
+			//FIXME on empty dates.
+			
 			//**If a volunteer from the file, then add it to list of volunteers.**
 			if (volunteerEventinfo[0].trim().equalsIgnoreCase("v")) {
 				/*
@@ -196,21 +198,34 @@ public class VolunteerMatch {
 				for (String strData : volunteerEventinfo) {
 					fileLineData.add(strData);	
 				}
-				if (fileLineData.size() != 3) {	
-					continue; //Volunteer lines must have exactly 3 items after splitting for valid line format.
+				//**We can have volunteers with a list of dates, and also with no dates available.** 
+				if (fileLineData.size() > 3 || fileLineData.size() < 2) {	
+					continue; //Volunteer lines must have exactly 2 or 3 items after splitting for valid line format.
 				}
-			
-				//**After passing format checks, construct names and dates from file.**
-				String name = fileLineData.get(1).trim(); 		 	  //The name of the volunteer.		
-				String[] vDates = fileLineData.get(2).split(","); //The comma-separated volunteer dates.
 				
-				//**Trimming each number/date of volunteer to avoid whitespace throwing NumberFormatExceptions.** 
-				for (int i = 0; i < vDates.length; i++) {
-					vDates[i] = vDates[i].trim();
-				}					
-				//Add volunteer to list of volunteers if no duplicate/invalid dates, else read next file line.
-				if (manager.addVolunteer(name, vDates) == false) {
-					continue; 
+				//**After passing format checks, construct names and dates from file.**
+				String name = fileLineData.get(1).trim();	//The name of the volunteer.
+				
+				if (fileLineData.size() == 2) {
+					//If we have no dates available from the file.
+					String[] vDates = {};					//An empty array with no items (length = 0).
+					
+					//Add volunteer to list of volunteers if no duplicate/invalid dates, else read next file line.
+					if (manager.addVolunteer(name, vDates) == false) {
+						continue; 
+					}
+				}
+				else {	//If a volunteer does have some dates available.
+					String[] vDates = fileLineData.get(2).split(",");     //The comma-separated volunteer dates.
+				
+					//**Trimming each number/date of volunteer to avoid whitespace throwing NumberFormatExceptions.** 
+					for (int i = 0; i < vDates.length; i++) {
+						vDates[i] = vDates[i].trim();
+					}					
+					//Add volunteer to list of volunteers if no duplicate/invalid dates, else read next file line.
+					if (manager.addVolunteer(name, vDates) == false) {
+						continue; 
+					}
 				}
 			}
 			
@@ -218,29 +233,31 @@ public class VolunteerMatch {
 			else if (volunteerEventinfo[0].trim().equalsIgnoreCase("e")) { 
 				String eventName = volunteerEventinfo[1].trim(); //Title of the event.
 				
-				//Adding exactly 5 items (each is separate event data from file line) to an arrayList.
 				for (String strData : volunteerEventinfo) {
 					fileLineData.add(strData);	
 				}
-				if (fileLineData.size() != 5) {	
-					continue; //Event lines must have exactly 5 items after splitting for valid line format.
+				if (fileLineData.size() < 4 || fileLineData.size() > 5) {	
+					continue; //Event lines must have 4 or 5 items after splitting (some events don't have volunteers).
 				}
 									
 				//**Parsing the event logistics from the file line.**
 				String eventDate = fileLineData.get(2).trim(); 	       //The date of the event.
 				String maxNumVolunteers = fileLineData.get(3).trim();  //Max amount of volunteers for this event.
-				String volunteerNames = fileLineData.get(4).trim();    //The list of matched volunteers.
 						
 				//**Add event to list of events if no duplicate event and logistics are valid, else continue.**
 				if (manager.addEvent(eventName, eventDate, maxNumVolunteers) == false) {
 					continue;		
 				}
-				String[] volunteerList = volunteerNames.split(","); //Get list of volunteer names from the event.
-				
-				//**Attempting to create a match between this event and all of its potential volunteers.**
-				for (String vName : volunteerList) {
-					if (manager.createMatch(eventName, vName.trim()) == false) {
-						continue;	//If a volunteer wasn't able to be matched, then continue to next line.
+				//**If the event file line has 5th index for matched volunteers, add them to a list.**
+				if (fileLineData.size() > 4) { 
+					String volunteerNames = fileLineData.get(4).trim();    //The list of matched volunteers.
+					String[] volunteerList = volunteerNames.split(","); //Get list of volunteer names from the event.
+					
+					//**Attempting to create a match between this event and all of its potential volunteers.**
+					for (String vName : volunteerList) {
+						if (manager.createMatch(eventName, vName.trim()) == false) {
+							continue;	//If a volunteer wasn't able to be matched, then continue to next line.
+						}
 					}
 				}
 			}
@@ -274,19 +291,16 @@ public class VolunteerMatch {
 	 * @throws FileNotFoundException if the program cannot make a file to the filePath, it throws FileNotFoundException
 	 */
 	public static void writeToFile(EventManager manager, String filePath) throws FileNotFoundException{
-		Scanner fileReader = null;	   //Scanner to scan through data of inputFile.
-		File outFile = null;	   	   //The output file that holds the volunteer and event data.
+		
 		PrintWriter writer = null;     //Enables the writing of data from inputFile to an output file.
 		
-		outFile = new File(filePath);
-		fileReader = new Scanner(outFile);
-		writer = new PrintWriter(filePath + ".txt");	//Creating the output file with the .txt extension.
+		writer = new PrintWriter(filePath);	//Creating the output file with the .txt extension.
 		
-		while (fileReader.hasNextLine()) {
-			writer.printf("shit");
-		}
+		//**Writing the volunteers to the file first, then the events.**
+		writer.printf(manager.toStringAllVolunteers());
+		writer.printf(manager.toStringAllEvents());
 		
 		writer.close();
-		fileReader.close();
+		
 	}
 }

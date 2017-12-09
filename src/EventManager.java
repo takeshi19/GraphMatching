@@ -51,7 +51,7 @@ public class EventManager {
 	public boolean addEvent(String name, String dateStr, String limitStr){
 		int eventDate = Integer.parseInt(dateStr);		//Integer value of the date of the event.
 		int maxVolunteers = Integer.parseInt(limitStr); //Integer value of the max number of volunteers for this event.
-		
+				
 		if (!(findEvent(name) == null) || name == null || name.isEmpty()) {
 			return false;	//If duplicate name, empty name, or null name, then return false.
 		}
@@ -66,7 +66,7 @@ public class EventManager {
 		Event newEvent = new Event(name, eventDate, maxVolunteers);
 		eventList.add(newEvent); 
 		Collections.sort(eventList);
-		
+
 		return true;	//Return true after adding in the event list.
 	}
 		
@@ -88,28 +88,34 @@ public class EventManager {
 	 */
 	public boolean addVolunteer(String name, String[] availableDatesStrAry){		
 		int date = 0;		//The separate integer values we got from file, put into availableDatesStrAry.
-		ArrayList<Integer> intDates = new ArrayList<Integer>();	//The list of integers dates derived from String array.
+		ArrayList<Integer> intDates = new ArrayList<Integer>(0);  //The list of integers dates derived from String array.
 	
 		if (!(findVolunteer(name) == null) || name == null || name.isEmpty()) {
 			return false;	//If duplicate name, empty name, or null name, then return false.
 		}
-		
-		/*
-		 * Getting volunteer dates and putting them into an arrayList.
-		 * For each string number, make into integer, add as date to intDates list.
-		 */
-		for (String str : availableDatesStrAry) { 
-			date = Integer.parseInt(str);
-			intDates.add(date); 		  
-		}		
-		//**Return false if there are any invalid date values (not in 1 -> 30 range), or duplicate dates.**
-		for (int i = 0; i < intDates.size(); i++) {
-			if (!(1 <= intDates.get(i)) || !(intDates.get(i) <= 30)) {
-				return false;		//Return false for invalid dates.
-			}
-			for (int j = i + 1; j < intDates.size(); j++) { 
-				if (intDates.get(i) == intDates.get(j)) {
-					return false;	//Return false for duplicate dates.
+		 
+		if (!availableDatesStrAry[0].equals("")) { //If array of dates is available for volunteer.
+			/*
+			 * Getting volunteer dates and putting them into an arrayList.
+			 * For each string number, make into integer, add as date to intDates list.
+			 */
+			for (String str : availableDatesStrAry) { 
+				try {
+					date = Integer.parseInt(str.trim()); //Removing trailing/leading whitespace to avoid NumFormatExeception
+				} catch (NumberFormatException e) {
+					return false;//If user tries entering in anything other than integers for dates of volunteer.
+				}
+				intDates.add(date); 		  
+			}		
+			//**Return false if there are any invalid date values (not in 1 -> 30 range), or duplicate dates.**
+			for (int i = 0; i < intDates.size(); i++) {
+				if (!(1 <= intDates.get(i)) || !(intDates.get(i) <= 30)) {
+					return false;		//Return false for invalid dates.
+				}
+				for (int j = i + 1; j < intDates.size(); j++) { 
+					if (intDates.get(i) == intDates.get(j)) {
+						return false;	//Return false for duplicate dates.
+					}
 				}
 			}
 		}
@@ -251,7 +257,6 @@ public class EventManager {
 		//**If volunteer has been matched to any other event on the same date, no match made.**
 		for (Event otherEvent : eventList) {
 			if (!otherEvent.getName().equalsIgnoreCase(eventName)) {  
-				System.out.println(otherEvent.getName());
 				if (matchedEvent.getDate() == otherEvent.getDate()) {
 					if (potentialVol.hasEvent(otherEvent.getName())) {
 						return false;
@@ -329,7 +334,7 @@ public class EventManager {
 			System.out.printf(Resource.STR_DISPLAY_ALL_EVENTS_PRINT_FORMAT, eventList.size());
 			
 			for (Event eve : eventList) {
-				System.out.println(eve.toString());
+				System.out.print(eve.toString());
 			}
 		}
 	}
@@ -354,7 +359,7 @@ public class EventManager {
 			System.out.printf(Resource.STR_DISPLAY_ALL_VOLUNTEERS_PRINT_FORMAT, volunteerList.size());
 
 			for (Volunteer vol : volunteerList) {
-				System.out.println(vol.toString());		
+				System.out.print(vol.toString());		
 			}
 		}
 	}
@@ -377,7 +382,7 @@ public class EventManager {
 		StringBuilder fileStringOfVols = new StringBuilder();	//Concatenating strings together into 1 large string.
 		 
 		for (Volunteer vol : volunteerList) {
-			fileStringOfVols.append(vol.toFileString());
+			fileStringOfVols.append(vol.toFileString()).append("\n");
 		}
 		return fileStringOfVols.toString();
 	}
@@ -398,7 +403,7 @@ public class EventManager {
 		StringBuilder fileStringOfEvents = new StringBuilder();	//Concatenating strings together into 1 large string.
 		 
 		for (Event eve : eventList) {
-			fileStringOfEvents.append(eve.toFileString());
+			fileStringOfEvents.append(eve.toFileString()).append("\n");
 		}
 		return fileStringOfEvents.toString();
 	}
