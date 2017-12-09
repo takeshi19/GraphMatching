@@ -1,3 +1,17 @@
+/////////////////////////////////////////////////////////////////////////////
+// Semester:         CS367 Fall 2017 
+// PROJECT:          p5
+// FILE:             VolunteerMatch.java
+//
+// TEAM:    N/A
+// Authors: Manuel T. Gomez
+// Author1: Manuel T. Gomez, gomez22@wisc.edu, gomez22, 005
+// Author2: N/A
+//
+// ---------------- OTHER ASSISTANCE CREDITS 
+//	N/A 
+//////////////////////////// 80 columns wide //////////////////////////////////
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -19,6 +33,9 @@ import java.util.Scanner;
  * The main menu loop interacts with an instance of EventManager using menu.
  * This class is also responsible for the most of the 
  * user input from menu and for reading and writing data in files.
+ * 
+ * <p> Bugs: N/A
+ * @author Manuel T. Gomez
  */
 public class VolunteerMatch {
 	
@@ -185,8 +202,6 @@ public class VolunteerMatch {
 			String fileLine = fileScn.nextLine().trim(); //The string of data per line from file.
 			String[] volunteerEventinfo = fileLine.split(";"); 		  //Split line based on delimiters (";").
 			ArrayList<String> fileLineData = new ArrayList<String>(); //ArrayList to hold strings after splitting.
-			
-			//FIXME on empty dates.
 			
 			//**If a volunteer from the file, then add it to list of volunteers.**
 			if (volunteerEventinfo[0].trim().equalsIgnoreCase("v")) {

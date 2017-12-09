@@ -1,3 +1,21 @@
+/////////////////////////////////////////////////////////////////////////////
+// Semester:         CS367 Fall 2017 
+// PROJECT:          p5
+// FILE:             EventManager.java
+//
+// TEAM:    N/A
+// Authors: Manuel T. Gomez
+// Author1: Manuel T. Gomez, gomez22@wisc.edu, gomez22, 005
+// Author2: N/A
+//
+// ---------------- OTHER ASSISTANCE CREDITS 
+// https://stackoverflow.com/questions/1532461/stringbuilder-vs-string
+//-concatenation-in-tostring-in-java 
+// --> This link helped me build the large strings in the toStringAllEvents()
+//		method and the toStringAllVolunteers() method.
+//  
+//////////////////////////// 80 columns wide //////////////////////////////////
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -12,6 +30,9 @@ import java.util.List;
  * and for displaying the events and volunteers that exist.
  * 
  * An EventManager instance manages the list of events and volunteers.
+ * 
+ * <p> Bugs: N/A
+ * @author Manuel T. Gomez
  */
 public class EventManager {
 	
@@ -93,33 +114,34 @@ public class EventManager {
 		if (!(findVolunteer(name) == null) || name == null || name.isEmpty()) {
 			return false;	//If duplicate name, empty name, or null name, then return false.
 		}
-		 
-		if (!availableDatesStrAry[0].equals("")) { //If array of dates is available for volunteer.
-			/*
-			 * Getting volunteer dates and putting them into an arrayList.
-			 * For each string number, make into integer, add as date to intDates list.
-			 */
-			for (String str : availableDatesStrAry) { 
-				try {
-					date = Integer.parseInt(str.trim()); //Removing trailing/leading whitespace to avoid NumFormatExeception
-				} catch (NumberFormatException e) {
-					return false;//If user tries entering in anything other than integers for dates of volunteer.
-				}
-				intDates.add(date); 		  
-			}		
-			//**Return false if there are any invalid date values (not in 1 -> 30 range), or duplicate dates.**
-			for (int i = 0; i < intDates.size(); i++) {
-				if (!(1 <= intDates.get(i)) || !(intDates.get(i) <= 30)) {
-					return false;		//Return false for invalid dates.
-				}
-				for (int j = i + 1; j < intDates.size(); j++) { 
-					if (intDates.get(i) == intDates.get(j)) {
-						return false;	//Return false for duplicate dates.
+		if (availableDatesStrAry.length != 0) { 	   //Helps for when dates are empty in file lines of volunteer.
+			if (!availableDatesStrAry[0].equals("")) { //If array of dates is available for volunteer.
+				/*
+				 * Getting volunteer dates and putting them into an arrayList.
+				 * For each string number, make into integer, add as date to intDates list.
+				 */
+				for (String str : availableDatesStrAry) { 
+					try {
+						date = Integer.parseInt(str.trim()); //Removing trailing/leading whitespace to avoid NumFormatExeception
+					} catch (NumberFormatException e) {
+						return false;      //If user tries entering in anything other than integers for dates of volunteer.
+					}
+					intDates.add(date); 		  
+				}		
+				//**Return false if there are any invalid date values (not in 1 -> 30 range), or duplicate dates.**
+				for (int i = 0; i < intDates.size(); i++) {
+					if (!(1 <= intDates.get(i)) || !(intDates.get(i) <= 30)) {
+						return false;		//Return false for invalid dates.
+					}
+					for (int j = i + 1; j < intDates.size(); j++) { 
+						if (intDates.get(i) == intDates.get(j)) {
+							return false;	//Return false for duplicate dates.
+						}
 					}
 				}
 			}
 		}
-		//**If valid volunteer, then we add it to sorted list.**
+		//**If valid volunteer (even if no available dates), then we add it to sorted list.**
 		Volunteer newVolunteer = new Volunteer(name, intDates);
 		volunteerList.add(newVolunteer); 
 		Collections.sort(volunteerList);
@@ -378,7 +400,6 @@ public class EventManager {
 	 * in the format needed to be printed in the file.
 	 */
 	public String toStringAllVolunteers(){
-		//TODO probably bugs.
 		StringBuilder fileStringOfVols = new StringBuilder();	//Concatenating strings together into 1 large string.
 		 
 		for (Volunteer vol : volunteerList) {
@@ -399,7 +420,6 @@ public class EventManager {
 	 * needed to be printed in the file.
 	 */
 	public String toStringAllEvents(){
-		//TODO probably bugs.
 		StringBuilder fileStringOfEvents = new StringBuilder();	//Concatenating strings together into 1 large string.
 		 
 		for (Event eve : eventList) {
